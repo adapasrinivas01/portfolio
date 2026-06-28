@@ -11,10 +11,19 @@ app.use(cors({
         "http://127.0.0.1:5500",
         "http://localhost:5500",
         "https://adapasrinivas01.github.io"
-    ]
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
 }));
 
 app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Portfolio Backend API is running."
+    });
+});
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -36,18 +45,23 @@ app.post("/contact", async (req, res) => {
     try {
         await transporter.sendMail({
             from: process.env.EMAIL,
+            replyTo: email,
             to: process.env.EMAIL,
-            subject: "New Portfolio Contact",
+            subject: `New Portfolio Contact from ${name}`,
             html: `
                 <h2>New Contact Message</h2>
+
                 <p><strong>Name:</strong> ${name}</p>
+
                 <p><strong>Email:</strong> ${email}</p>
+
                 <p><strong>Message:</strong></p>
+
                 <p>${message}</p>
             `
         });
 
-        res.json({
+        res.status(200).json({
             message: "Message sent successfully!"
         });
 
