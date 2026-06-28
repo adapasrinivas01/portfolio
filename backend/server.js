@@ -12,18 +12,10 @@ app.use(cors({
         "http://localhost:5500",
         "https://adapasrinivas01.github.io"
     ],
-    methods: ["GET", "POST"],
-    credentials: true
+    methods: ["GET", "POST"]
 }));
 
 app.use(express.json());
-
-app.get("/", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Portfolio Backend API is running."
-    });
-});
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -33,7 +25,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+app.get("/", (req, res) => {
+    res.send("Portfolio Backend is Running");
+});
+
 app.post("/contact", async (req, res) => {
+
     const { name, email, message } = req.body;
 
     if (!name || !email || !message) {
@@ -43,20 +40,20 @@ app.post("/contact", async (req, res) => {
     }
 
     try {
+
         await transporter.sendMail({
+
             from: process.env.EMAIL,
-            replyTo: email,
             to: process.env.EMAIL,
+            replyTo: email,
+
             subject: `New Portfolio Contact from ${name}`,
+
             html: `
                 <h2>New Contact Message</h2>
-
                 <p><strong>Name:</strong> ${name}</p>
-
                 <p><strong>Email:</strong> ${email}</p>
-
                 <p><strong>Message:</strong></p>
-
                 <p>${message}</p>
             `
         });
@@ -66,15 +63,18 @@ app.post("/contact", async (req, res) => {
         });
 
     } catch (error) {
+
         console.error(error);
 
         res.status(500).json({
             message: "Failed to send message."
         });
+
     }
+
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
