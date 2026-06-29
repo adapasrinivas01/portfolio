@@ -2,10 +2,10 @@ const form = document.getElementById("contact-form");
 const status = document.getElementById("status");
 
 const API_URL =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-        ? "http://localhost:5000/contact"
-        : "https://portfolio-9j3o.onrender.com/contact";
+    window.location.hostname === "localhost"
+        ? "http://localhost:5000"
+        : window.location.origin;
+
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ form.addEventListener("submit", async (e) => {
     status.textContent = "Sending...";
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL}/contact`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
