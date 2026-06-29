@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
+const path = require("path");
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Serve frontend files
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -55,8 +59,9 @@ app.post("/contact", async (req, res) => {
     }
 });
 
+// Show portfolio homepage
 app.get("/", (req, res) => {
-    res.send("Portfolio Backend is Running");
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
