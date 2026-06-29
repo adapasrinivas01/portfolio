@@ -1,7 +1,6 @@
 const form = document.getElementById("contact-form");
 const status = document.getElementById("status");
 
-// API URL for both Localhost and Render
 const API_URL =
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1"
@@ -18,7 +17,6 @@ form.addEventListener("submit", async (e) => {
     };
 
     status.textContent = "Sending...";
-    status.style.color = "#fff";
 
     try {
         const response = await fetch(API_URL, {
@@ -36,7 +34,7 @@ form.addEventListener("submit", async (e) => {
             status.style.color = "lime";
             form.reset();
         } else {
-            status.textContent = result.message || "Failed to send message.";
+            status.textContent = result.message;
             status.style.color = "red";
         }
     } catch (err) {
@@ -46,7 +44,6 @@ form.addEventListener("submit", async (e) => {
     }
 });
 
-// Active Navigation
 const sections = document.querySelectorAll("section");
 const navLinks = document.querySelectorAll(".navlinks a");
 
@@ -70,7 +67,6 @@ window.addEventListener("scroll", () => {
     });
 });
 
-// Smooth Scroll
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
         e.preventDefault();

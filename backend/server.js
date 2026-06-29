@@ -11,14 +11,14 @@ app.use(cors({
     origin: [
         "http://127.0.0.1:5500",
         "http://localhost:5500",
-        "https://adapasrinivas01.github.io"
+        "https://adapasrinivas01.github.io",
+        "https://portfolio-9j3o.onrender.com"
     ],
     methods: ["GET", "POST"]
 }));
 
 app.use(express.json());
 
-// Serve frontend files
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 const transporter = nodemailer.createTransport({
@@ -46,10 +46,11 @@ app.post("/contact", async (req, res) => {
             `
         });
 
-        res.status(200).json({
+        res.json({
             success: true,
             message: "Message sent successfully!"
         });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -59,7 +60,6 @@ app.post("/contact", async (req, res) => {
     }
 });
 
-// Show portfolio homepage
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
