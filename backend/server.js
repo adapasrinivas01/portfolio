@@ -13,19 +13,40 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
+transporter.verify((error) => {
+    if (error) {
+        console.error("SMTP Error:", error);
+    } else {
+        console.log("SMTP Connected Successfully");
     }
 });
 
 app.post("/contact", async (req, res) => {
     const { name, email, message } = req.body;
 
+    if (!name || !email || !message) {
+        return res.status(400).json({
+            success: false,
+            message: "All fields are required."
+        });
+    }
+
     try {
         await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+            from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
+            replyTo: email,
             to: process.env.EMAIL_USER,
             subject: `Portfolio Contact from ${name}`,
             html: `
@@ -37,7 +58,7 @@ app.post("/contact", async (req, res) => {
             `
         });
 
-        res.json({
+        res.status(200).json({
             success: true,
             message: "Message sent successfully!"
         });
